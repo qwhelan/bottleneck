@@ -56,6 +56,10 @@ before_install:
     - uname -a
     - source "tools/travis/conda_setup.sh"
     - export PATH="$HOME/miniconda/bin:$PATH"
+    - which python
+    - which pip
+    - echo $PYTHONPATH
+    - env
 
 install:
     - source "tools/travis/conda_install.sh"
