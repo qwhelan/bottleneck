@@ -11,7 +11,7 @@ else
     TEST_NAME="test-python-${PYTHON_VERSION}_${PYTHON_ARCH}bit"
 fi
 export TEST_NAME
-PACKAGING_DEPS="pip setuptools wheel mkl "
+PACKAGING_DEPS="pip setuptools wheel mkl_random "
 # split dependencies into separate packages
 IFS=" " TEST_DEPS=(${PACKAGING_DEPS}${TEST_DEPS})
 echo "Creating environment ${TEST_NAME} with packages ${TEST_DEPS[@]}..."
