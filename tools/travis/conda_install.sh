@@ -11,9 +11,10 @@ else
     TEST_NAME="test-python-${PYTHON_VERSION}_${PYTHON_ARCH}bit"
 fi
 export TEST_NAME
+PACKAGING_DEPS="pip setuptools wheel "
 # split dependencies into separate packages
-IFS=" " TEST_DEPS=(${TEST_DEPS})
-echo "Creating environment '${TEST_NAME}'..."
+IFS=" " TEST_DEPS=(${PACKAGING_DEPS}${TEST_DEPS})
+echo "Creating environment ${TEST_NAME} with packages ${TEST_DEPS[@]}..."
 conda create -q -n "${TEST_NAME}" "${TEST_DEPS[@]}" python="${PYTHON_VERSION}"
 
 set +v # we dont want to see commands in the conda script
