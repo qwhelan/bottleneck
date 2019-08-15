@@ -10,6 +10,12 @@ if [ -n "${TEST_RUN}" ]; then
 else
     TEST_NAME="test-python-${PYTHON_VERSION}_${PYTHON_ARCH}bit"
 fi
+if [ "${PYTHON_VERSION}" == "2.7" ]; then
+    # Use conda to install numpy as pip tries to install version that has
+    # deprecated 2.7
+    TEST_DEPS=$TEST_DEPS" numpy"
+fi
+
 export TEST_NAME
 #conda config --add channels conda-forge
 #conda config --set channel_priority strict
