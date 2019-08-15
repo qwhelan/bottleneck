@@ -70,7 +70,7 @@ def check_for_bad_mkl_random():
     sort, so we must assume it's bad if installed.
     """
     try:
-        import mkl_random
+        import mkl_random  # noqa
         return ['mkl_random', 'cython']
     except ImportError:
         return []
@@ -101,7 +101,7 @@ metadata = dict(name='Bottleneck',
                 packages=find_packages(),
                 package_data={'bottleneck': ['LICENSE']},
                 requires=['numpy'] + check_for_bad_mkl_random(),
-                install_requires=['numpy'],
+                install_requires=['numpy'] + check_for_bad_mkl_random(),
                 cmdclass={'build_ext': build_ext},
                 setup_requires=['numpy'])
 
