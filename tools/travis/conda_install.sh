@@ -24,3 +24,4 @@ set +v # we dont want to see commands in the conda script
 source activate "${TEST_NAME}"
 conda info -a
 conda list
+pip install --upgrade pip
