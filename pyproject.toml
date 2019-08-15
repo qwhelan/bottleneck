@@ -1,2 +1,2 @@
 [build-system]
-requires = ["setuptools", "wheel", "numpy", "cython", "mkl-random"]
+requires = ["pip", "setuptools", "wheel", "numpy", "cython", "mkl-random"]
