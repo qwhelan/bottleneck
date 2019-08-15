@@ -62,6 +62,20 @@ def get_version_str():
     return version
 
 
+def check_for_bad_mkl_random():
+    """ Try to work around the bad mkl_random=1.0.1 release, which forces an
+    unnecessary cython dependency upon us.
+
+    Unfortunately, mkl_random doesn't expose a __version__ attribute of any
+    sort, so we must assume it's bad if installed.
+    """
+    try:
+        import mkl_random
+        return ['mkl_random', 'cython']
+    except ImportError:
+        return []
+
+
 CLASSIFIERS = ["Development Status :: 4 - Beta",
                "Environment :: Console",
                "Intended Audience :: Science/Research",
@@ -86,10 +100,10 @@ metadata = dict(name='Bottleneck',
                 version=get_version_str(),
                 packages=find_packages(),
                 package_data={'bottleneck': ['LICENSE']},
-                requires=['numpy', 'mkl_random', 'cython'],
-                install_requires=['numpy', 'mkl_random', 'cython'],
+                requires=['numpy'] + check_for_bad_mkl_random(),
+                install_requires=['numpy'],
                 cmdclass={'build_ext': build_ext},
-                setup_requires=['numpy', 'mkl_random', 'cython'])
+                setup_requires=['numpy'])
 
 
 if not(len(sys.argv) >= 2 and ('--help' in sys.argv[1:] or
