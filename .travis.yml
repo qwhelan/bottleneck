@@ -8,7 +8,7 @@ matrix:
         # test installing bottleneck tarball before installing numpy;
         # start this test first because it takes the longest
         - os: linux
-          env: TEST_DEPS="numpy nose"
+          env: TEST_DEPS="nose"
                PYTHON_VERSION="2.7"
                PYTHON_ARCH="64"
                TEST_RUN="sdist"
@@ -22,33 +22,33 @@ matrix:
 
         # python 3.5
         - os: linux
-          env: TEST_DEPS="numpy nose"
+          env: TEST_DEPS="nose"
                PYTHON_VERSION="3.5"
                PYTHON_ARCH="64"
                TEST_RUN="sdist"
 
          # python 3.6
         - os: linux
-          env: TEST_DEPS="numpy nose"
+          env: TEST_DEPS="nose"
                PYTHON_VERSION="3.6"
                PYTHON_ARCH="64"
 
         # python 2.7
         - os: osx
-          env: TEST_DEPS="numpy nose"
+          env: TEST_DEPS="nose"
                PYTHON_VERSION="2.7"
                PYTHON_ARCH="64"
                TEST_RUN="sdist"
 
         # python 3.5
         - os: osx
-          env: TEST_DEPS="numpy nose"
+          env: TEST_DEPS="nose"
                PYTHON_VERSION="3.5"
                PYTHON_ARCH="64"
 
         # python 3.6
         - os: osx
-          env: TEST_DEPS="numpy nose"
+          env: TEST_DEPS="nose"
                PYTHON_VERSION="3.6"
                PYTHON_ARCH="64"
 
