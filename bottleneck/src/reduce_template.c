@@ -430,7 +430,7 @@ REDUCE_MAIN(NAME, 1)
 REDUCE_ALL(NAME, DTYPE0)
 {
     npy_DTYPE0 ai, extreme = BIG_FLOAT;
-    int allnan = 1;
+    int onlynan = 1;
     INIT_ALL
     if (SIZE == 0) {
         VALUE_ERR("numpy.NAME raises on a.size==0 and axis=None; "
@@ -443,12 +443,12 @@ REDUCE_ALL(NAME, DTYPE0)
             ai = AI(DTYPE0);
             if (ai COMPARE extreme) {
                 extreme = ai;
-                allnan = 0;
+                onlynan = 0;
             }
         }
         NEXT
     }
-    if (allnan) extreme = BN_NAN;
+    if (onlynan) extreme = BN_NAN;
     BN_END_ALLOW_THREADS
     return PyFloat_FromDouble(extreme);
 }
@@ -456,7 +456,7 @@ REDUCE_ALL(NAME, DTYPE0)
 REDUCE_ONE(NAME, DTYPE0)
 {
     npy_DTYPE0 ai, extreme;
-    int allnan;
+    int onlynan;
     INIT_ONE(DTYPE0, DTYPE0)
     if (LENGTH == 0) {
         VALUE_ERR("numpy.NAME raises on a.shape[axis]==0; "
@@ -466,15 +466,15 @@ REDUCE_ONE(NAME, DTYPE0)
     BN_BEGIN_ALLOW_THREADS
     WHILE {
         extreme = BIG_FLOAT;
-        allnan = 1;
+        onlynan = 1;
         FOR {
             ai = AI(DTYPE0);
             if (ai COMPARE extreme) {
                 extreme = ai;
-                allnan = 0;
+                onlynan = 0;
             }
         }
-        if (allnan) extreme = BN_NAN;
+        if (onlynan) extreme = BN_NAN;
         YPP = extreme;
         NEXT
     }
@@ -543,7 +543,7 @@ REDUCE_MAIN(NAME, 0)
 REDUCE_ALL(NAME, DTYPE0)
 {
     npy_DTYPE0 ai, extreme = BIG_FLOAT;
-    int allnan = 1;
+    int onlynan = 1;
     Py_ssize_t idx = 0;
     INIT_ALL_RAVEL
     if (SIZE == 0) {
@@ -557,13 +557,13 @@ REDUCE_ALL(NAME, DTYPE0)
         ai = AI(DTYPE0);
         if (ai COMPARE extreme) {
             extreme = ai;
-            allnan = 0;
+            onlynan = 0;
             idx = INDEX;
         }
     }
     BN_END_ALLOW_THREADS
     DECREF_INIT_ALL_RAVEL
-    if (allnan) {
+    if (onlynan) {
         VALUE_ERR("All-NaN slice encountered");
         return NULL;
     } else {
@@ -573,7 +573,7 @@ REDUCE_ALL(NAME, DTYPE0)
 
 REDUCE_ONE(NAME, DTYPE0)
 {
-    int allnan, err_code = 0;
+    int onlynan, err_code = 0;
     Py_ssize_t idx = 0;
     npy_DTYPE0 ai, extreme;
     INIT_ONE(INTP, intp)
@@ -585,16 +585,16 @@ REDUCE_ONE(NAME, DTYPE0)
     BN_BEGIN_ALLOW_THREADS
     WHILE {
         extreme = BIG_FLOAT;
-        allnan = 1;
+        onlynan = 1;
         FOR_REVERSE {
             ai = AI(DTYPE0);
             if (ai COMPARE extreme) {
                 extreme = ai;
-                allnan = 0;
+                onlynan = 0;
                 idx = INDEX;
             }
         }
-        if (allnan == 0) {
+        if (onlynan == 0) {
             YPP = idx;
         } else {
             err_code = 1;
