@@ -609,12 +609,16 @@ REDUCE_ONE(NAME, DTYPE0)
     return y;
 }
 /* dtype end */
+/* repeat end */
 
-/* dtype = [['int64', 'intp'], ['int32', 'intp']] */
+/* repeat = {'NAME':      ['nanargmin',      'nanargmax'],
+             'COMPARE':   ['<',              '>'],
+             'BIG_INT':   ['NPY_MAX_DTYPE0', 'NPY_MIN_DTYPE0']} */
+/* dtype = [['int64', 'intp', '0'], ['int32', 'intp', '1']] */
 REDUCE_ALL(NAME, DTYPE0)
 {
     npy_DTYPE1 idx = 0;
-    npy_DTYPE0 ai, extreme = BIG_INT;
+    npy_DTYPE0 extreme = BIG_INT;
     INIT_ALL_RAVEL
     if (SIZE == 0) {
         DECREF_INIT_ALL_RAVEL
@@ -623,13 +627,49 @@ REDUCE_ALL(NAME, DTYPE0)
         return NULL;
     }
     BN_BEGIN_ALLOW_THREADS
+        /*    const npy_intp loop_size = 512 / sizeof(npy_DTYPE0);
+    npy_DTYPE0 extremes[loop_size];
+    npy_DTYPE1 idxes[loop_size];
+    for (npy_intp i=0; i<loop_size; i++) {
+        extremes[i] = extreme;
+        idxes[i] = idx;
+        } */
     npy_DTYPE0* array = PA(DTYPE0);
-    FOR_REVERSE {
-        ai = SI(array);
-        if (ai COMPARE extreme) {
-            extreme = ai;
-            idx = INDEX;
+    /*    const npy_intp num_loops = it.length / loop_size;
+    const npy_intp loop_resid = it.length % loop_size;
+
+    for (npy_intp i=0; i < num_loops; i++) {
+        const npy_intp offset = i * loop_size;
+        for (npy_intp j=0; j < loop_size; j++) {
+            const npy_DTYPE0 ai = array[offset + j];
+            if (ai COMPARE extremes[j]) {
+                extremes[j] = ai;
+                idxes[j] = offset + j;
+            } else {
+                extremes[j] = extremes[j];
+                idxes[j] = idxes[j];
+            }
         }
+    }
+
+    for (npy_intp i=0; i < loop_size; i++) {
+        if (extremes[i] COMPARE extreme) {
+            extreme = extremes[i];
+            idx = idxes[i];
+        }
+        } */
+
+    if ((DTYPE2) && (it.length < 200000000)) {
+        npy_int32 idx32;
+        for (npy_int32 i=0; i< it.length; i++) {
+        extreme = array[i] COMPARE extreme ? array[i] : extreme;
+    }
+        idx = idx32;
+    } else {
+    
+    for (npy_intp i=0; i< it.length; i++) {
+        extreme = array[i] COMPARE extreme ? idx = i, array[i] : extreme;
+    }
     }
     BN_END_ALLOW_THREADS
     DECREF_INIT_ALL_RAVEL
