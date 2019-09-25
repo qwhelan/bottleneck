@@ -540,6 +540,7 @@ REDUCE_MAIN(NAME, 0)
              'BIG_FLOAT': ['BN_INFINITY',    '-BN_INFINITY'],
              'BIG_INT':   ['NPY_MAX_DTYPE0', 'NPY_MIN_DTYPE0']} */
 /* dtype = [['float64'], ['float32']] */
+BN_OPT_3
 REDUCE_ALL(NAME, DTYPE0)
 {
     npy_DTYPE0 ai, extreme = BIG_FLOAT;
@@ -553,8 +554,9 @@ REDUCE_ALL(NAME, DTYPE0)
         return NULL;
     }
     BN_BEGIN_ALLOW_THREADS
-    FOR_REVERSE {
-        ai = AI(DTYPE0);
+        const npy_DTYPE0* array = PA(DTYPE0);
+        FOR_REVERSE {
+        ai = array[it.i];
         if (ai COMPARE extreme) {
             extreme = ai;
             onlynan = 0;
@@ -615,6 +617,7 @@ REDUCE_ONE(NAME, DTYPE0)
              'COMPARE':   ['<',              '>'],
              'BIG_INT':   ['NPY_MAX_DTYPE0', 'NPY_MIN_DTYPE0']} */
 /* dtype = [['int64', 'intp', '0'], ['int32', 'intp', '1']] */
+BN_OPT_3
 REDUCE_ALL(NAME, DTYPE0)
 {
     npy_DTYPE1 idx = 0;
