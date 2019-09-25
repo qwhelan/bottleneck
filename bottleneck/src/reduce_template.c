@@ -623,8 +623,9 @@ REDUCE_ALL(NAME, DTYPE0)
         return NULL;
     }
     BN_BEGIN_ALLOW_THREADS
+    npy_DTYPE0* array = PA(DTYPE0);
     FOR_REVERSE {
-        ai = AI(DTYPE0);
+        ai = SI(array);
         if (ai COMPARE extreme) {
             extreme = ai;
             idx = INDEX;

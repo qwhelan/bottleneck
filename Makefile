@@ -12,6 +12,7 @@ help:
 	@echo "clean   -->  Remove all the build files for a fresh start"
 	@echo "test    -->  Run unit tests"
 	@echo "flake8  -->  Check for pep8 errors"
+	@echo "black   -->  Run black formatter"
 	@echo "readme  -->  Update benchmark results in README.rst"
 	@echo "bench   -->  Run performance benchmark"
 	@echo "detail  -->  Detailed benchmarks for all functions"
@@ -19,7 +20,7 @@ help:
 	@echo "doc     -->  Build Sphinx manual"
 	@echo "pypi    -->  Upload to pypi"
 
-all: clean build test flake8
+all: clean build test black flake8
 
 build:
 	${PYTHON} setup.py build_ext --inplace
@@ -29,6 +30,9 @@ test:
 
 flake8:
 	flake8
+
+black:
+	black . --exclude '(asv_bench/env|\.asv|\.git|\.tox|build|dist|\.eggs)'
 
 readme:
 	PYTHONPATH=`pwd`:PYTHONPATH ${PYTHON} tools/update_readme.py
