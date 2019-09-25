@@ -615,6 +615,7 @@ REDUCE_ONE(NAME, DTYPE0)
 
 /* repeat = {'NAME':      ['nanargmin',      'nanargmax'],
              'COMPARE':   ['<',              '>'],
+
              'BIG_INT':   ['NPY_MAX_DTYPE0', 'NPY_MIN_DTYPE0']} */
 /* dtype = [['int64', 'intp', '0'], ['int32', 'intp', '1']] */
 BN_OPT_3
@@ -644,14 +645,12 @@ REDUCE_ALL(NAME, DTYPE0)
     for (npy_intp i=0; i < num_loops; i++) {
         const npy_intp offset = i * loop_size;
         for (npy_intp j=0; j < loop_size; j++) {
-            const npy_DTYPE0 ai = array[offset + j];
-            if (ai COMPARE extremes[j]) {
+            idxes[j] = array[offset + j] COMPARE extremes[j] ? offset + j : idxes;
+            extremes[j] = array[offset + j] COMPARE extremes[j] ? array[offset + j] : extremes[j];
+            /*            if (ai COMPARE extremes[j]) {
                 extremes[j] = ai;
                 idxes[j] = offset + j;
-            } else {
-                extremes[j] = extremes[j];
-                idxes[j] = idxes[j];
-            }
+                }*/
         }
     }
 
