@@ -630,15 +630,15 @@ REDUCE_ALL(NAME, DTYPE0)
         return NULL;
     }
     BN_BEGIN_ALLOW_THREADS
-        /*    const npy_intp loop_size = 512 / sizeof(npy_DTYPE0);
+    const npy_intp loop_size = 512 / sizeof(npy_DTYPE0);
     npy_DTYPE0 extremes[loop_size];
     npy_DTYPE1 idxes[loop_size];
     for (npy_intp i=0; i<loop_size; i++) {
         extremes[i] = extreme;
         idxes[i] = idx;
-        } */
+        }
     npy_DTYPE0* array = PA(DTYPE0);
-    /*    const npy_intp num_loops = it.length / loop_size;
+    const npy_intp num_loops = it.length / loop_size;
     const npy_intp loop_resid = it.length % loop_size;
 
     for (npy_intp i=0; i < num_loops; i++) {
@@ -660,9 +660,9 @@ REDUCE_ALL(NAME, DTYPE0)
             extreme = extremes[i];
             idx = idxes[i];
         }
-        } */
+        }
 
-    if ((DTYPE2) && (it.length < 200000000)) {
+    /*    if ((DTYPE2) && (it.length < 200000000)) {
         npy_int32 idx32;
         for (npy_int32 i=0; i< it.length; i++) {
         extreme = array[i] COMPARE extreme ? array[i] : extreme;
@@ -673,7 +673,7 @@ REDUCE_ALL(NAME, DTYPE0)
     for (npy_intp i=0; i< it.length; i++) {
         extreme = array[i] COMPARE extreme ? idx = i, array[i] : extreme;
     }
-    }
+    }*/
     BN_END_ALLOW_THREADS
     DECREF_INIT_ALL_RAVEL
     return PyLong_FromLongLong(idx);
