@@ -344,17 +344,17 @@ nanrankdata(PyObject *self, PyObject *args, PyObject *kwds)
 /* push ------------------------------------------------------------------ */
 
 /* dtype = [['float64'], ['float32']] */
+BN_OPT_3
 NRA(push, DTYPE0)
 {
     npy_intp index;
-    npy_DTYPE0 ai, ai_last, n_float;
+    npy_DTYPE0 ai, ai_last;
     PyObject *y = PyArray_Copy(a);
     iter it;
     init_iter_one(&it, (PyArrayObject *)y, axis);
     if (LENGTH == 0 || NDIM == 0) {
         return y;
     }
-    n_float = n < 0 ? BN_INFINITY : (npy_DTYPE0)n;
     BN_BEGIN_ALLOW_THREADS
     if (n >= 0) {
         WHILE {
@@ -366,7 +366,7 @@ NRA(push, DTYPE0)
                     ai_last = ai;
                     index = INDEX;
                 } else {
-                    if (INDEX - index <= n_float) {
+                    if (INDEX - index <= n) {
                         AI(DTYPE0) = ai_last;
                     }
                 }
@@ -378,11 +378,12 @@ NRA(push, DTYPE0)
             ai_last = BN_NAN;
             npy_DTYPE0* array = PA(DTYPE0);
             FOR {
-                const npy_DTYPE0 val = SI(array);
+                //                SI(array) = SI(array) != SI(array) ? ai_last : SI(array), ai_last = SI(array);
+                const npy_DTYPE0 val = array[it.i];
                 if (val == val) {
                     ai_last = val;
                 } else {
-                    SI(array) = ai_last;
+                    array[it.i] = ai_last;
                 }
             }
             NEXT
