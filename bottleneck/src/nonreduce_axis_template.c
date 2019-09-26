@@ -356,21 +356,37 @@ NRA(push, DTYPE0)
     }
     n_float = n < 0 ? BN_INFINITY : (npy_DTYPE0)n;
     BN_BEGIN_ALLOW_THREADS
-    WHILE {
-        index = 0;
-        ai_last = BN_NAN;
-        FOR {
-            ai = AI(DTYPE0);
-            if (ai == ai) {
-                ai_last = ai;
-                index = INDEX;
-            } else {
-                if (INDEX - index <= n_float) {
-                    AI(DTYPE0) = ai_last;
+    if (n >= 0) {
+        WHILE {
+            index = 0;
+            ai_last = BN_NAN;
+            FOR {
+                ai = AI(DTYPE0);
+                if (ai == ai) {
+                    ai_last = ai;
+                    index = INDEX;
+                } else {
+                    if (INDEX - index <= n_float) {
+                        AI(DTYPE0) = ai_last;
+                    }
                 }
             }
+            NEXT
         }
-        NEXT
+    } else {
+        WHILE {
+            ai_last = BN_NAN;
+            npy_DTYPE0* array = PA(DTYPE0);
+            FOR {
+                const npy_DTYPE0 val = SI(array);
+                if (val == val) {
+                    ai_last = val;
+                } else {
+                    SI(array) = ai_last;
+                }
+            }
+            NEXT
+        }
     }
     BN_END_ALLOW_THREADS
     return y;
