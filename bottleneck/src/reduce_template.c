@@ -834,8 +834,15 @@ REDUCE_MAIN(ss, 0)
 #define MEDIAN_INT(dtype) \
     npy_intp j, l, r, k; \
     npy_##dtype ai; \
-    for (i = 0; i < LENGTH; i++) { \
-        B(dtype, i) = AX(dtype, i); \
+    npy_##dtype* array = PA(dtype); \
+    if (it.stride == 1) { \
+        for (i = 0; i < LENGTH; i++) { \
+            B(dtype, i) = array[i]; \
+        } \
+    } else { \
+        for (i = 0; i < LENGTH; i++) { \
+            B(dtype, i) = array[i * it.stride];       \
+        } \
     } \
     k = LENGTH >> 1; \
     l = 0; \
@@ -918,6 +925,7 @@ REDUCE_ONE(NAME, DTYPE0)
 /* repeat end */
 
 /* dtype = [['int64', 'float64'], ['int32', 'float64']] */
+BN_OPT_3
 REDUCE_ALL(median, DTYPE0)
 {
     npy_intp i;
