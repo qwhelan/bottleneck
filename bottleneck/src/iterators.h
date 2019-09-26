@@ -67,7 +67,7 @@ init_iter_one(iter *it, PyArrayObject *a, int axis)
  * calling Py_DECREF(it.a_ravel) after you are done with the iterator.
  * See nanargmin for an example.
  */
-static inline void
+static inline BN_OPT_3 void
 init_iter_all(iter *it, PyArrayObject *a, int ravel, int anyorder)
 {
     int i, j = 0;
@@ -112,23 +112,20 @@ init_iter_all(iter *it, PyArrayObject *a, int ravel, int anyorder)
         if (anyorder || !ravel) {
             it->ndim_m2 = -1;
             it->length = PyArray_SIZE(a);
-            it->astride = 0;
-            for (i=0; i < ndim; i++) {
+            it->astride = PyArray_STRIDE(a, 0);
+            /*            for (i=0; i < ndim; i++) { */
                 /* protect against length zero  strides such as in
                  * np.ones((2, 2), order='F')[np.newaxis, ...] */
-                if (strides[i] == 0) {
+            /*                if (strides[i] == 0) {
                     continue;
                 }
                 it->astride = strides[i];
                 break;
-           }
+           }*/
+            //            printf("astride=%d, other_stride=%d, yet other=%d", (int)it->astride, (int)PyArray_STRIDE(a, 0), (int)PyArray_STRIDE(a, -1));
         } else {
             it->ndim_m2 = -1;
-            if (anyorder) {
-                a = (PyArrayObject *)PyArray_Ravel(a, NPY_ANYORDER);
-            } else {
-                a = (PyArrayObject *)PyArray_Ravel(a, NPY_CORDER);
-            }
+            a = (PyArrayObject *)PyArray_Ravel(a, NPY_CORDER);
             it->a_ravel = a;
             it->length = PyArray_DIM(a, 0);
             it->astride = PyArray_STRIDE(a, 0);

@@ -546,9 +546,9 @@ REDUCE_ALL(NAME, DTYPE0)
     npy_DTYPE0 ai, extreme = BIG_FLOAT;
     int onlynan = 1;
     Py_ssize_t idx = 0;
-    INIT_ALL_RAVEL
+    INIT_ALL
     if (SIZE == 0) {
-        DECREF_INIT_ALL_RAVEL
+        //        DECREF_INIT_ALL_RAVEL
         VALUE_ERR("numpy.NAME raises on a.size==0 and axis=None; "
                   "So Bottleneck too.");
         return NULL;
@@ -564,7 +564,7 @@ REDUCE_ALL(NAME, DTYPE0)
         }
     }
     BN_END_ALLOW_THREADS
-    DECREF_INIT_ALL_RAVEL
+        //    DECREF_INIT_ALL_RAVEL
     if (onlynan) {
         VALUE_ERR("All-NaN slice encountered");
         return NULL;
@@ -623,9 +623,9 @@ REDUCE_ALL(NAME, DTYPE0)
 {
     npy_DTYPE1 idx = 0;
     npy_DTYPE0 extreme = BIG_INT;
-    INIT_ALL_RAVEL
+    INIT_ALL
     if (SIZE == 0) {
-        DECREF_INIT_ALL_RAVEL
+        //        DECREF_INIT_ALL_RAVEL
         VALUE_ERR("numpy.NAME raises on a.size==0 and axis=None; "
                   "So Bottleneck too.");
         return NULL;
@@ -674,7 +674,7 @@ REDUCE_ALL(NAME, DTYPE0)
     }
     }*/
     BN_END_ALLOW_THREADS
-    DECREF_INIT_ALL_RAVEL
+        //    DECREF_INIT_ALL_RAVEL
     return PyLong_FromLongLong(idx);
 }
 
