@@ -72,7 +72,7 @@ class build_ext(_build_ext):
         else:
             import builtins
         builtins.__NUMPY_SETUP__ = False
-        import numpy
+        import numpy  # noqa: F811
 
         # place numpy includes first, see gh #156
         self.include_dirs.insert(0, numpy.get_include())
@@ -167,6 +167,13 @@ CLASSIFIERS = [
     "Topic :: Scientific/Engineering",
 ]
 
+try:
+    import numpy  # noqa: F401
+except ImportError:
+    build_requires = ["numpy>=1.13.3"]
+else:
+    build_requires = []
+
 
 metadata = dict(
     name="Bottleneck",
@@ -183,11 +190,10 @@ metadata = dict(
     version=versioneer.get_version(),
     packages=find_packages(),
     package_data={"bottleneck": ["LICENSE"]},
-    requires=["numpy"],
-    install_requires=["numpy"],
+    install_requires=build_requires,
     extras_require={"doc": ["numpydoc", "sphinx", "gitpython"]},
     cmdclass=cmdclass,
-    setup_requires=["numpy"],
+    setup_requires=build_requires,
     ext_modules=prepare_modules(),
     zip_safe=False,
 )
