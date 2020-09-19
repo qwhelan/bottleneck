@@ -3,6 +3,7 @@
 import warnings
 
 import numpy as np
+from typing import Callable, Optional, List, Union
 
 __all__ = [
     "move_sum",
@@ -18,7 +19,9 @@ __all__ = [
 ]
 
 
-def move_sum(a, window, min_count=None, axis=-1):
+def move_sum(
+    a: np.ndarray, window: int, min_count: Optional[int] = None, axis: int = -1
+) -> np.ndarray:
     "Slow move_sum for unaccelerated dtype"
     return move_func(np.nansum, a, window, min_count, axis=axis)
 
@@ -74,7 +77,7 @@ def move_argmin(a, window, min_count=None, axis=-1):
     return move_func(argmin, a, window, min_count, axis=axis)
 
 
-def move_argmax(a, window, min_count=None, axis=-1):
+def move_argmax(a, window, min_count=None, axis=-1) -> np.ndarray:
     "Slow move_argmax for unaccelerated dtype"
 
     def argmax(a, axis):
@@ -100,12 +103,12 @@ def move_argmax(a, window, min_count=None, axis=-1):
     return move_func(argmax, a, window, min_count, axis=axis)
 
 
-def move_median(a, window, min_count=None, axis=-1):
+def move_median(a, window, min_count=None, axis=-1) -> np.ndarray:
     "Slow move_median for unaccelerated dtype"
     return move_func(np.nanmedian, a, window, min_count, axis=axis)
 
 
-def move_rank(a, window, min_count=None, axis=-1):
+def move_rank(a, window, min_count=None, axis=-1) -> np.ndarray:
     "Slow move_rank for unaccelerated dtype"
     return move_func(lastrank, a, window, min_count, axis=axis)
 
@@ -113,7 +116,14 @@ def move_rank(a, window, min_count=None, axis=-1):
 # magic utility functions ---------------------------------------------------
 
 
-def move_func(func, a, window, min_count=None, axis=-1, **kwargs):
+def move_func(
+    func: Callable[[np.ndarray], np.ndarray],
+    a: np.ndarray,
+    window: int,
+    min_count: Optional[int] = None,
+    axis: int = -1,
+    **kwargs
+) -> np.ndarray:
     "Generic moving window function implemented with a python loop."
     a = np.array(a, copy=False)
     if min_count is None:
@@ -137,7 +147,7 @@ def move_func(func, a, window, min_count=None, axis=-1, **kwargs):
         y = np.empty_like(a)
     else:
         y = np.empty(a.shape)
-    idx1 = [slice(None)] * a.ndim
+    idx1: List[Union[slice, int]] = [slice(None)] * a.ndim
     idx2 = list(idx1)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -151,7 +161,7 @@ def move_func(func, a, window, min_count=None, axis=-1, **kwargs):
     return y
 
 
-def _mask(a, window, min_count, axis):
+def _mask(a: np.ndarray, window: int, min_count: int, axis: int) -> np.ndarray:
     n = (a == a).cumsum(axis)
     idx1 = [slice(None)] * a.ndim
     idx2 = [slice(None)] * a.ndim
@@ -159,21 +169,21 @@ def _mask(a, window, min_count, axis):
     idx1[axis] = slice(window, None)
     idx2[axis] = slice(None, -window)
     idx3[axis] = slice(None, window)
-    idx1 = tuple(idx1)
-    idx2 = tuple(idx2)
-    idx3 = tuple(idx3)
-    nidx1 = n[idx1]
-    nidx1 = nidx1 - n[idx2]
+    idx1_tuple = tuple(idx1)
+    idx2_tuple = tuple(idx2)
+    idx3_tuple = tuple(idx3)
+    nidx1 = n[idx1_tuple]
+    nidx1 = nidx1 - n[idx2_tuple]
     idx = np.empty(a.shape, dtype=np.bool)
-    idx[idx1] = nidx1 < min_count
-    idx[idx3] = n[idx3] < min_count
+    idx[idx1_tuple] = nidx1 < min_count
+    idx[idx3_tuple] = n[idx3_tuple] < min_count
     return idx
 
 
 # ---------------------------------------------------------------------------
 
 
-def lastrank(a, axis=-1):
+def lastrank(a: np.ndarray, axis: int = -1) -> np.ndarray:
     """
     The ranking of the last element along the axis, ignoring NaNs.
 
@@ -237,14 +247,16 @@ def lastrank(a, axis=-1):
         if (r.ndim == 0) and (r.size == 1):
             r = np.nan
         return r
+
     indlast = [slice(None)] * ndim
     indlast[axis] = slice(-1, None)
-    indlast = tuple(indlast)
-    indlast2 = [slice(None)] * ndim
+    indlast_tuple = tuple(indlast)
+
+    indlast2: List[Union[slice, int]] = [slice(None)] * ndim
     indlast2[axis] = -1
-    indlast2 = tuple(indlast2)
+    indlast2_tuple = tuple(indlast2)
     n = (~np.isnan(a)).sum(axis)
-    a_indlast = a[indlast]
+    a_indlast = a[indlast_tuple]
     g = (a_indlast > a).sum(axis)
     e = (a_indlast == a).sum(axis)
     r = (g + g + e - 1.0) / 2.0
@@ -253,9 +265,9 @@ def lastrank(a, axis=-1):
     if ndim == 1:
         if n == 1:
             r = 0
-        if np.isnan(a[indlast2]):  # elif?
+        if np.isnan(a[indlast2_tuple]):  # elif?
             r = np.nan
     else:
         np.putmask(r, n == 1, 0)
-        np.putmask(r, np.isnan(a[indlast2]), np.nan)
+        np.putmask(r, np.isnan(a[indlast2_tuple]), np.nan)
     return r

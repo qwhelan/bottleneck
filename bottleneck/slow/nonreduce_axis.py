@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import argpartition, partition
+from typing import Optional, Union
 
 __all__ = ["rankdata", "nanrankdata", "partition", "argpartition", "push"]
 
@@ -36,7 +37,9 @@ def _nanrankdata_1d(a):
     return y
 
 
-def push(a, n=None, axis=-1):
+def push(
+    a: Union[np.ndarray, int, float], n: Optional[int] = None, axis: int = -1
+) -> Union[np.ndarray, int, float]:
     "Slow push used for unaccelerated dtypes."
     if n is None:
         n = np.inf

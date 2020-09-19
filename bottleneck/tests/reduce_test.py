@@ -2,7 +2,7 @@
 
 import traceback
 import warnings
-from typing import Callable, List, Optional, Union
+from typing import Callable, Optional, Union, Sequence
 
 import hypothesis
 import numpy as np
@@ -21,7 +21,7 @@ def _hypothesis_helper(
 ) -> None:
     slow_func = eval("bn.slow.%s" % func.__name__)
     ndim = array.ndim
-    axes: List[Optional[int]] = list(range(-ndim, ndim)) + [None]
+    axes: Sequence[Optional[int]] = list(range(-ndim, ndim)) + [None]  # type: ignore
     for order in ["C", "F"]:
         if order == "F":
             arr = np.asfortranarray(array)
@@ -274,7 +274,7 @@ def test_nanstd_issue60() -> None:
 def test_nanvar_issue60() -> None:
     """nanvar regression test (issue #60)"""
 
-    f = bn.nanvar([1.0], ddof=1)
+    f = bn.reduce.nanvar([1.0], ddof=1)
     with np.errstate(invalid="ignore"):
         s = bn.slow.nanvar([1.0], ddof=1)
     assert_equal(f, s, err_msg="bn.nanvar([1.0], ddof=1) wrong")

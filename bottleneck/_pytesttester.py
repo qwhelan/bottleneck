@@ -32,7 +32,7 @@ class PytestTester(object):
         import pytest
 
         module = sys.modules[self.module_name]
-        module_path = os.path.abspath(module.__path__[0])
+        module_path = os.path.abspath(module.__path__[0])  # type: ignore
 
         pytest_args = ["-l"]
 

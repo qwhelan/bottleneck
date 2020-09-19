@@ -38,7 +38,6 @@ except ImportError:
         "pip install --no-build-isolation --no-cache-dir "
         "bottleneck"
     )
-
 from bottleneck.benchmark.bench import bench
 from bottleneck.benchmark.bench_detailed import bench_detailed
 from bottleneck.tests.util import get_functions
