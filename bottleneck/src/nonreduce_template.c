@@ -33,7 +33,8 @@ replace_DTYPE0(PyArrayObject *a, double old, double new) {
             WHILE {
                 npy_DTYPE0* array = PA(DTYPE0);
                 FOR {
-                    array[it.i * it.stride] = array[it.i * it.stride] == oldf ? newf : array[it.i * it.stride];
+                    array[it.i * it.stride] = array[it.i * it.stride] == \
+                    oldf ? newf : array[it.i * it.stride];
                 }
                 NEXT
             }
@@ -43,7 +44,8 @@ replace_DTYPE0(PyArrayObject *a, double old, double new) {
             WHILE {
                 npy_DTYPE0* array = PA(DTYPE0);
                 FOR {
-                    array[it.i * it.stride] = array[it.i * it.stride] != array[it.i * it.stride] ? newf : array[it.i * it.stride];
+                    array[it.i * it.stride] = array[it.i * it.stride] != \
+                    array[it.i * it.stride] ? newf : array[it.i * it.stride];
                 }
                 NEXT
             }
@@ -78,18 +80,22 @@ replace_DTYPE0(PyArrayObject *a, double old, double new) {
             const npy_intp nits = it.nits;
             const npy_intp length = it.length;
             for (npy_intp i=0; i < nits; i++) {
-                // clang has a large perf regression when using the FOR macro here
+                // clang has a large perf regression when using the
+                // FOR macro here
                 for (npy_intp j=0; j < length; j++) {
-                    array[i * nits + j] = array[i * nits + j] == oldint ? newint : array[i * nits + j];
+                    array[i * nits + j] = array[i * nits + j] == \
+                        oldint ? newint : array[i * nits + j];
                 }
             }
         } else {
             WHILE {
                 const npy_intp stride = it.stride;
                 npy_DTYPE0* array = PA(DTYPE0);
-                // clang has a large perf regression when using the FOR macro here
+                // clang has a large perf regression when using the
+                // FOR macro here
                 for (npy_intp i=0; i < it.length; i++) {
-                    array[i * stride] = array[i * stride] == oldint ? newint : array[i * stride];
+                    array[i * stride] = array[i * stride] == \
+                        oldint ? newint : array[i * stride];
                 }
                 NEXT
             }

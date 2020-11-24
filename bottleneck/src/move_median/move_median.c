@@ -583,7 +583,8 @@ heapify_large_node(mm_handle *mm, idx_t idx) {
 /* Return the index of the smallest child of the node. The pointer
  * child will also be set. */
 static inline idx_t
-mm_get_smallest_child(mm_node **heap, idx_t window, idx_t idx, mm_node **child) {
+mm_get_smallest_child(mm_node **heap, idx_t window, idx_t idx,
+                      mm_node **child) {
     idx_t i0 = FC_IDX(idx);
     idx_t i1 = i0 + NUM_CHILDREN;
     i1 = min(i1, window);

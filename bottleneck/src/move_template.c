@@ -218,7 +218,8 @@ MOVE(move_mean, DTYPE0) {
         }
         WHILE1 {
             asum += AI(DTYPE0);
-            *(npy_DTYPE1*)(it.py + it.i * it.ystride) = (npy_DTYPE1)asum / (it.i + 1);
+            *(npy_DTYPE1*)(it.py + it.i * it.ystride) = \
+                (npy_DTYPE1)asum / (it.i + 1);
             it.i++;
         }
         WHILE2 {
