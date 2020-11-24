@@ -276,11 +276,11 @@ mm_print_binary_heap(mm_node **heap, idx_t n_array, idx_t oldest_idx,
                      idx_t newest_idx) {
     const int line_width = 77;
     int print_pos[n_array];
-    int i, j, k, pos, x = 1, level = 0;
+    int i, j, k, x = 1, level = 0;
 
     print_pos[0] = 0;
     for (i=0, j=1; i < (int)n_array; i++, j++) {
-        pos = print_pos[(i-1)/2];
+        int pos = print_pos[(i-1)/2];
         pos +=  ((i%2) ? -1 : 1)*(line_width/(pow(2, level+1))+1);
 
         for (k=0; k < pos - x; k++) printf("%c", i == 0 || i % 2 ? ' ' : '-');

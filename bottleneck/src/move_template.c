@@ -452,14 +452,13 @@ MOVE(NAME, DTYPE0) {
     npy_DTYPE0 yi_tmp;
     pairs *extreme_pair;
     pairs *end;
-    pairs *last;
     pairs *ring = (pairs *)malloc(window * sizeof(pairs));
     INIT(NPY_DTYPE0)
     BN_BEGIN_ALLOW_THREADS
     WHILE {
         Py_ssize_t count = 0;
         end = ring + window;
-        last = ring;
+        pairs* last = ring;
         extreme_pair = ring;
         npy_DTYPE0 ai = A0(DTYPE0);
         extreme_pair->value = !bn_isnan(ai) ? ai : BIG_FLOAT;
